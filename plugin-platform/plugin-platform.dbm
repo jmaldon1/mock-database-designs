@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="133,0" last-zoom="1.05" max-obj-count="9"
+	 default-schema="public" default-owner="postgres">
+<database name="postgres" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="data" layer="0" rect-visible="true" fill-color="#0055ff">
+	<role name="postgres"/>
+</schema>
+
+<table name="plugins" layer="0" collapse-mode="1" max-obj-count="3" z-value="0">
+	<schema name="data"/>
+	<role name="postgres"/>
+	<position x="689.667" y="508.429"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="plugins_pk" type="pk-constr" table="data.plugins">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_plugin_name" type="uq-constr" table="data.plugins">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<initial-data>
+<![CDATA[id•name•description⸣
+•OB-Xd•Synth]]>
+	</initial-data>
+</table>
+
+<table name="operating_systems" layer="0" collapse-mode="1" max-obj-count="2" z-value="0">
+	<schema name="data"/>
+	<role name="postgres"/>
+	<position x="778.381" y="778.238"/>
+	<column name="id">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="operating_system" not-null="true">
+		<type name="text" length="50"/>
+	</column>
+	<constraint name="operating_systems_pk" type="pk-constr" table="data.operating_systems">
+		<columns names="operating_system" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="operating_system_len_check" type="ck-constr" table="data.operating_systems">
+			<expression><![CDATA[length(operating_system) <= 50]]></expression>
+	</constraint>
+</table>
+
+<table name="plugin_types" layer="0" collapse-mode="1" max-obj-count="2" z-value="0">
+	<schema name="data"/>
+	<role name="postgres"/>
+	<position x="1235.48" y="777.524"/>
+	<column name="id">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="text" length="5"/>
+	</column>
+	<constraint name="plugin_types_pk" type="pk-constr" table="data.plugin_types">
+		<columns names="type" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="plugin_types_len_check" type="ck-constr" table="data.plugin_types">
+			<expression><![CDATA[length(type) <= 5]]></expression>
+	</constraint>
+</table>
+
+<table name="plugin_variants" layer="0" collapse-mode="1" max-obj-count="4" z-value="0">
+	<schema name="data"/>
+	<role name="postgres"/>
+	<position x="979.762" y="505.238"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="plugin_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="operating_system" not-null="true">
+		<type name="text" length="50"/>
+	</column>
+	<column name="plugin_type" not-null="true">
+		<type name="text" length="5"/>
+	</column>
+	<constraint name="plugin_downloads_pk" type="pk-constr" table="data.plugin_variants">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="plugin_downloads" layer="0" collapse-mode="1" max-obj-count="3" z-value="0">
+	<schema name="data"/>
+	<role name="postgres"/>
+	<position x="1382.24" y="493"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="plugin_variant_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="download_link" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="plugin_downloads_pk_1" type="pk-constr" table="data.plugin_downloads">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<schema name="api" layer="0" rect-visible="true" fill-color="#aaff00">
+	<role name="postgres"/>
+</schema>
+
+<view name="plugins" layer="0" collapse-mode="2" max-obj-count="1" z-value="0">
+	<schema name="api"/>
+	<role name="postgres"/>
+	<position x="699.524" y="159.571"/>
+	<reference table="data.plugins"/>
+	<expression type="select-exp">0</expression>
+	<expression type="from-exp">0</expression>
+</view>
+
+<relationship name="rel_plugins_plugins" type="reltv" layer="0"
+	 src-table="api.plugins"
+	 dst-table="data.plugins"
+	 src-required="false" dst-required="false"/>
+
+<view name="plugin_download_link" layer="0" collapse-mode="2" max-obj-count="9" z-value="0">
+	<schema name="api"/>
+	<role name="postgres"/>
+	<position x="1022.28" y="139.571"/>
+	<reference table="data.plugin_variants" column="plugin_id" alias="t2"/>
+	<reference table="data.plugins" column="name" alias="t3"/>
+	<reference table="data.plugin_variants" column="operating_system" alias="t2"/>
+	<reference table="data.plugin_variants" column="plugin_type" alias="t2"/>
+	<reference table="data.plugin_downloads" column="download_link" alias="t1"/>
+	<reference table="data.plugin_downloads" alias="t1"/>
+	<reference>
+		<expression><![CDATA[INNER JOIN
+	data.plugin_variants as t2 on plugin_variant_id = t2.id]]></expression>
+	</reference>
+	<reference>
+		<expression><![CDATA[
+INNER JOIN
+	data.plugins as t3 on t2.plugin_id = t3.id;]]></expression>
+	</reference>
+	<expression type="select-exp">0,1,2,3,4</expression>
+	<expression type="from-exp">5</expression>
+	<expression type="end-exp">6,7</expression>
+</view>
+
+<relationship name="rel_plugin_download_link_plugin_variants" type="reltv" layer="0"
+	 src-table="api.plugin_download_link"
+	 dst-table="data.plugin_variants"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_plugin_download_link_plugins" type="reltv" layer="0"
+	 src-table="api.plugin_download_link"
+	 dst-table="data.plugins"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_plugin_download_link_plugin_downloads" type="reltv" layer="0"
+	 src-table="api.plugin_download_link"
+	 dst-table="data.plugin_downloads"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<constraint name="operating_systems_download_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="data.operating_systems" table="data.plugin_variants">
+	<columns names="operating_system" ref-type="src-columns"/>
+	<columns names="operating_system" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="all_plugin_types_download_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="data.plugin_types" table="data.plugin_variants">
+	<columns names="plugin_type" ref-type="src-columns"/>
+	<columns names="type" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="plugins_downloads_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="data.plugins" table="data.plugin_variants">
+	<columns names="plugin_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="plugin_variants_plugin_downloads_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="data.plugin_variants" table="data.plugin_downloads">
+	<columns names="plugin_variant_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_plugin_variants_operating_systems" type="relfk" layer="0"
+	 src-table="data.plugin_variants"
+	 dst-table="data.operating_systems" reference-fk="operating_systems_download_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_plugin_variants_all_plugin_types" type="relfk" layer="0"
+	 src-table="data.plugin_variants"
+	 dst-table="data.plugin_types" reference-fk="all_plugin_types_download_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_plugin_variants_plugins" type="relfk" layer="0"
+	 src-table="data.plugin_variants"
+	 dst-table="data.plugins" reference-fk="plugins_downloads_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_plugin_downloads_plugin_variants" type="relfk" layer="0"
+	 src-table="data.plugin_downloads"
+	 dst-table="data.plugin_variants" reference-fk="plugin_variants_plugin_downloads_fk"
+	 src-required="false" dst-required="true"/>
+
+</dbmodel>
